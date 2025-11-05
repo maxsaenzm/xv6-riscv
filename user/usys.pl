@@ -41,4 +41,9 @@ entry("dup");
 entry("getpid");
 entry("sbrk");
 entry("pause");
-entry("uptime");
+entry("uptime");entry("getppid");
+entry("getancestor");
+entry("settickets");
+entry("gettickets");
+entry("getwins");
+

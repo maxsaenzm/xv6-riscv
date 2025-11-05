@@ -20,3 +20,8 @@
 #define SYS_link   19
 #define SYS_mkdir  20
 #define SYS_close  21
+#define SYS_getppid 22
+#define SYS_getancestor 23
+#define SYS_settickets 24
+#define SYS_gettickets 25
+#define SYS_getwins 26

@@ -20,10 +20,16 @@ int link(const char*, const char*);
 int mkdir(const char*);
 int chdir(const char*);
 int dup(int);
-int getpid(void);
+int getpid(void);int getppid(void);
+int getancestor(int);
 char* sys_sbrk(int,int);
 int pause(int);
 int uptime(void);
+int settickets(int n);
+int gettickets(void);
+int getwins(int pid);
+
+
 
 // ulib.c
 int stat(const char*, struct stat*);

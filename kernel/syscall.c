@@ -53,19 +53,21 @@ argraw(int n)
 }
 
 // Fetch the nth 32-bit system call argument.
-void
+int
 argint(int n, int *ip)
 {
   *ip = argraw(n);
+  return 0;
 }
 
 // Retrieve an argument as a pointer.
 // Doesn't check for legality, since
 // copyin/copyout will do that.
-void
+int
 argaddr(int n, uint64 *ip)
 {
   *ip = argraw(n);
+  return 0;
 }
 
 // Fetch the nth word-sized system call argument as a null-terminated string.
@@ -75,7 +77,8 @@ int
 argstr(int n, char *buf, int max)
 {
   uint64 addr;
-  argaddr(n, &addr);
+  if (argaddr(n, &addr) < 0)
+    return -1;
   return fetchstr(addr, buf, max);
 }
 
@@ -91,6 +94,8 @@ extern uint64 sys_fstat(void);
 extern uint64 sys_chdir(void);
 extern uint64 sys_dup(void);
 extern uint64 sys_getpid(void);
+extern uint64 sys_getppid(void);
+extern uint64 sys_getancestor(void);
 extern uint64 sys_sbrk(void);
 extern uint64 sys_pause(void);
 extern uint64 sys_uptime(void);
@@ -101,6 +106,10 @@ extern uint64 sys_unlink(void);
 extern uint64 sys_link(void);
 extern uint64 sys_mkdir(void);
 extern uint64 sys_close(void);
+extern uint64 sys_settickets(void);
+extern uint64 sys_gettickets(void);
+extern uint64 sys_getwins(void);
+
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
@@ -116,6 +125,8 @@ static uint64 (*syscalls[])(void) = {
 [SYS_chdir]   sys_chdir,
 [SYS_dup]     sys_dup,
 [SYS_getpid]  sys_getpid,
+[SYS_getppid]     sys_getppid,
+[SYS_getancestor] sys_getancestor,
 [SYS_sbrk]    sys_sbrk,
 [SYS_pause]   sys_pause,
 [SYS_uptime]  sys_uptime,
@@ -126,6 +137,11 @@ static uint64 (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
+[SYS_settickets] = sys_settickets,
+[SYS_gettickets] = sys_gettickets,
+[SYS_getwins] = sys_getwins,
+
+
 };
 
 void

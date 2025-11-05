@@ -7,6 +7,10 @@
 #include "proc.h"
 #include "vm.h"
 
+
+extern struct proc proc[NPROC];
+
+
 uint64
 sys_exit(void)
 {
@@ -105,3 +109,84 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+// --- T1: nuevas syscalls ---
+extern struct proc *myproc(void);
+
+uint64
+sys_getppid(void)
+{
+  struct proc *p = myproc();
+  if(p->parent)
+    return p->parent->pid;
+  return -1;
+}
+
+uint64
+sys_getancestor(void)
+{
+  int n;
+
+  argint(0, &n);          // solo carga el argumento 0 en n (SIN if)
+  if(n < 0) return -1;
+
+  struct proc *p = myproc();
+  for(int i = 0; i < n; i++){
+    if(p->parent == 0) return -1;
+    p = p->parent;
+  }
+  return p->pid;
+}
+
+uint64
+sys_settickets(void)
+{
+  int n;
+  argint(0, &n);              // lee el 1er argumento
+  if (n < 1)                  // valida
+    return -1;
+
+  struct proc *p = myproc();
+  acquire(&p->lock);
+  p->tickets = n;
+  release(&p->lock);
+  return 0;
+}
+
+
+uint64
+sys_gettickets(void)
+{
+  struct proc *p = myproc();
+  int t;
+
+  acquire(&p->lock);
+  t = p->tickets;
+  release(&p->lock);
+
+  return t;
+}
+
+
+uint64
+sys_getwins(void)
+{
+  int pid;
+  if (argint(0, &pid) < 0) return -1;
+
+  struct proc *p;
+  for (p = proc; p < &proc[NPROC]; p++) {
+    acquire(&p->lock);
+    if (p->pid == pid) {
+      int w = p->wins;
+      release(&p->lock);
+      return w;
+    }
+    release(&p->lock);
+  }
+  return -1;
+}
+
+
+
+
+
