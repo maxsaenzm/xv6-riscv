@@ -46,4 +46,5 @@ entry("getancestor");
 entry("settickets");
 entry("gettickets");
 entry("getwins");
-
+entry("mrdprotect");
+entry("munrdprotect");

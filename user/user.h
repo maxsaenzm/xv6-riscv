@@ -28,7 +28,8 @@ int uptime(void);
 int settickets(int n);
 int gettickets(void);
 int getwins(int pid);
-
+int mrdprotect(void *addr, int len);
+int munrdprotect(void *addr, int len);
 
 
 // ulib.c

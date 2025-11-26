@@ -147,6 +147,7 @@ UPROGS=\
 	$U/_ticktest\
 	$U/_winstats\
 	$U/_demo\
+	$U/_rdprotect_test\
 
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)

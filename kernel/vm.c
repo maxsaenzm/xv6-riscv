@@ -484,3 +484,57 @@ ismapped(pagetable_t pagetable, uint64 va)
   }
   return 0;
 }
+
+
+
+int
+check_valid_args(uint64 addr, int len)
+{
+  if(len <= 0) return 0;
+  if(addr % PGSIZE != 0) return 0;
+  return 1;
+}
+
+int
+mrdprotect(uint64 addr, int len)
+{
+  struct proc *p = myproc();
+  pte_t *pte;
+  uint64 a;
+  uint64 end = addr + ((uint64)len * PGSIZE);
+
+  if(!check_valid_args(addr, len)) return -1;
+
+  for(a = addr; a < end; a += PGSIZE){
+    if(a >= MAXVA) return -1;
+    pte = walk(p->pagetable, a, 0);
+    if(pte == 0 || (*pte & PTE_V) == 0 || (*pte & PTE_U) == 0){
+      return -1;
+    }
+    *pte &= ~PTE_R;
+  }
+  sfence_vma();
+  return 0;
+}
+
+int
+munrdprotect(uint64 addr, int len)
+{
+  struct proc *p = myproc();
+  pte_t *pte;
+  uint64 a;
+  uint64 end = addr + ((uint64)len * PGSIZE);
+
+  if(!check_valid_args(addr, len)) return -1;
+
+  for(a = addr; a < end; a += PGSIZE){
+    if(a >= MAXVA) return -1;
+    pte = walk(p->pagetable, a, 0);
+    if(pte == 0 || (*pte & PTE_V) == 0 || (*pte & PTE_U) == 0){
+      return -1;
+    }
+    *pte |= PTE_R;
+  }
+  sfence_vma();
+  return 0;
+}

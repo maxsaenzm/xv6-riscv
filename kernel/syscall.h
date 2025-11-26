@@ -25,3 +25,5 @@
 #define SYS_settickets 24
 #define SYS_gettickets 25
 #define SYS_getwins 26
+#define SYS_mrdprotect  27
+#define SYS_munrdprotect 28

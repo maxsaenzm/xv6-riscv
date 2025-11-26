@@ -109,7 +109,8 @@ extern uint64 sys_close(void);
 extern uint64 sys_settickets(void);
 extern uint64 sys_gettickets(void);
 extern uint64 sys_getwins(void);
-
+extern uint64 sys_mrdprotect(void);
+extern uint64 sys_munrdprotect(void);
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
@@ -140,6 +141,8 @@ static uint64 (*syscalls[])(void) = {
 [SYS_settickets] = sys_settickets,
 [SYS_gettickets] = sys_gettickets,
 [SYS_getwins] = sys_getwins,
+[SYS_mrdprotect]   sys_mrdprotect,
+[SYS_munrdprotect] sys_munrdprotect,
 
 
 };

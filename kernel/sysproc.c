@@ -187,6 +187,28 @@ sys_getwins(void)
 }
 
 
+uint64
+sys_mrdprotect(void)
+{
+  uint64 addr;
+  int len;
 
+  if(argaddr(0, &addr) < 0 || argint(1, &len) < 0)
+    return -1;
+
+  return mrdprotect(addr, len);
+}
+
+uint64
+sys_munrdprotect(void)
+{
+  uint64 addr;
+  int len;
+
+  if(argaddr(0, &addr) < 0 || argint(1, &len) < 0)
+    return -1;
+
+  return munrdprotect(addr, len);
+}
 
 
